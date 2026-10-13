@@ -10,11 +10,9 @@ public class Destroydelay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    
-        Destroy(gameObject,delay);
-        
-        
+        if (Input.GetKeySpace)
+        {
+            Destroy(gameObject,delay);
+        }
     }
-    
-
 }
