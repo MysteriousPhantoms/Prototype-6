@@ -6,7 +6,7 @@ public class WinZone : MonoBehaviour
  
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("whiteM"))
+        if (other.CompareTag("Player"))
         {
             winScreen.SetActive(true);
         }

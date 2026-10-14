@@ -5,14 +5,37 @@ public class TimeLoopTrigger : MonoBehaviour
 {
     public Transform startPoint;
 
-    private bool canLoop = false;
+    private GameObject player;
+    private Rigidbody2D rb;
+
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            rb = player.GetComponent<Rigidbody2D>();
+        }
+    }
 
     void Update()
     {
-        if (canLoop && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current != null &&
+            Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            Rigidbody2D rb = GameObject.FindGameObjectWithTag("Player")
-                .GetComponent<Rigidbody2D>();
+            if (player == null)
+            {
+                Debug.Log("Player is missing. Check the Player tag.");
+                return;
+            }
+
+            if (startPoint == null)
+            {
+                Debug.Log("Assign the Start Point in the Inspector.");
+                return;
+            }
+
+            player.transform.position = startPoint.position;
 
             if (rb != null)
             {
@@ -20,28 +43,15 @@ public class TimeLoopTrigger : MonoBehaviour
                 rb.angularVelocity = 0f;
             }
 
-            rb.transform.position = startPoint.position;
+            LoopCounter counter = FindFirstObjectByType<LoopCounter>();
 
-            FindObjectOfType<LoopCounter>().AddLoop();
+            if (counter != null)
+            {
+                counter.AddLoop();
+            }
 
-            canLoop = false;
+            Debug.Log("TIME LOOP ACTIVATED!");
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("whiteM"))
-        {
-            canLoop = true;
-            Debug.Log("Press SPACE to activate Time Loop");
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("whiteM"))
-        {
-            canLoop = false;
-        }
-    }
 }
